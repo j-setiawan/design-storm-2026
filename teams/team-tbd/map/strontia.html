@@ -238,7 +238,8 @@
   <section id="explore" aria-label="Explore" hidden>
     <p class="intro">Every picture below uses the same clock and the same depths. Move over any one of
       them (or tap it) and the crosshair shows the same moment and depth on all of them, with every
-      value listed at the top.</p>
+      value listed at the top. Dotted lines mark sensor servicing; in the storm view the yellow dashed
+      line is the river gage peak.</p>
     <div id="explore-controls">
       <div class="seg" role="group" aria-label="Time range">
         <button type="button" data-view="storm">Aug 14-15 storm</button>
@@ -619,7 +620,9 @@ function drawExplore() {
     drawTocStrip(document.getElementById("x-toc"), P, any.X);
   }
   const read = document.getElementById("x-read");
-  const idle = `<span style="color:var(--panel-ink-2)">Move over any picture (or tap it) to read every value at that moment and depth.${storm ? " Yellow dashed line: river gage peak." : ""} Dotted lines: sensor serviced.</span>`;
+  // Same shape as the hover readout, with invisible values as wide as real ones, so the pictures never move.
+  const idle = `<span style="color:var(--panel-ink-2)">Move over or tap a picture to read it here.</span><div class="vals">${
+    EXPLORE_PARAMS.map((key) => { const meta = P.params[key]; return `<span style="color:var(--panel-ink-2)">${esc(meta.label)}: <b style="visibility:hidden">${esc(fmtVal(P.views[S.view].params[key].domain[1], meta))}</b></span>`; }).join("")}</div>`;
   read.innerHTML = idle;
   const overlays = [...document.querySelectorAll("#x-panels canvas.overlay")];
   const clear = () => overlays.forEach((o) => sizeCanvas(o));
