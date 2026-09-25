@@ -22,6 +22,19 @@
     "abbrev": "DILRESCO",
     "label": "Water in storage, acre-feet",
     "since": "1987"
+   },
+   "feeds_prediction": {
+    "target": "alk",
+    "role": "Release timing here"
+   },
+   "latest_ops": {
+    "date": "2026-09-23",
+    "inflow_cfs": 88.0,
+    "outflow_cfs": 54.0,
+    "elevation_ft": 8983.64,
+    "storage_af": 167354.0,
+    "capacity_af": 257304.0,
+    "pct_full": 65.0
    }
   },
   {
@@ -47,6 +60,19 @@
     "abbrev": "CHERESCO",
     "label": "Water in storage, acre-feet",
     "since": "1989"
+   },
+   "feeds_prediction": {
+    "target": "alk",
+    "role": "Release timing here"
+   },
+   "latest_ops": {
+    "date": "2026-09-23",
+    "inflow_cfs": 81.0,
+    "outflow_cfs": 70.0,
+    "elevation_ft": 6805.7,
+    "storage_af": 51166.0,
+    "capacity_af": 79064.0,
+    "pct_full": 65.0
    }
   },
   {
@@ -56,7 +82,20 @@
    "usgs_name": "ELEVENMILE CANYON RE NEAR LAKE GEORGE, CO.",
    "lat": 38.9053,
    "lon": -105.4756,
-   "blurb": "High-plains storage on the South Platte in South Park. The marker sits at the dam, near Lake George."
+   "blurb": "High-plains storage on the South Platte in South Park. The marker sits at the dam, near Lake George.",
+   "feeds_prediction": {
+    "target": "alk",
+    "role": "Release timing here"
+   },
+   "latest_ops": {
+    "date": "2026-09-23",
+    "inflow_cfs": 86.0,
+    "outflow_cfs": 69.0,
+    "elevation_ft": 8596.53,
+    "storage_af": 96193.0,
+    "capacity_af": 97779.0,
+    "pct_full": 98.0
+   }
   },
   {
    "id": "res-antero",
@@ -65,7 +104,20 @@
    "usgs_name": "ANTERO RESERVOIR",
    "lat": 38.9936,
    "lon": -105.895,
-   "blurb": "The uppermost South Platte reservoir, in South Park."
+   "blurb": "The uppermost South Platte reservoir, in South Park.",
+   "feeds_prediction": {
+    "target": "alk",
+    "role": "Release timing here"
+   },
+   "latest_ops": {
+    "date": "2026-09-23",
+    "inflow_cfs": 1.0,
+    "outflow_cfs": 1.0,
+    "elevation_ft": 8923.9,
+    "storage_af": 0.0,
+    "capacity_af": 20122.0,
+    "pct_full": 0.0
+   }
   },
   {
    "id": "res-chatfield",
@@ -114,6 +166,10 @@
     "site": "06707525",
     "param": "63680",
     "label": "Turbidity, FNU"
+   },
+   "feeds_prediction": {
+    "target": "both",
+    "role": "Near-term reading here"
    }
   },
   {

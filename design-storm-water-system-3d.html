@@ -41,6 +41,32 @@
   .spark-label { font-size: 11px; color: var(--panel-ink-2); margin-top: 8px; }
   .latest { font-size: 20px; font-weight: 600; margin: 2px 0 0; }
   .latest small { font-size: 11px; font-weight: 400; color: var(--panel-ink-2); }
+  .pred-callout {
+    display: flex; gap: 10px; margin-top: 10px; padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.05); border: 1px solid var(--panel-line);
+    border-radius: 8px; font-size: 12.5px;
+  }
+  .pred-callout .col { flex: 1; }
+  .pred-callout .label { color: var(--panel-ink-2); font-size: 11px; }
+  .pred-callout .value { font-size: 16px; font-weight: 600; margin-top: 2px; }
+  .pred-callout .value.actual { color: #b8c0c8; }
+  .legend-lines { display: flex; gap: 14px; margin-top: 4px; font-size: 11px; color: var(--panel-ink-2); }
+  .legend-lines .swatch { display: inline-block; width: 14px; height: 2px; margin-right: 5px; vertical-align: middle; }
+  .legend-lines .swatch.dashed { height: 0; border-top: 2px dashed currentColor; background: none; }
+  details.pred-inputs { margin-top: 8px; font-size: 12px; }
+  details.pred-inputs summary { cursor: pointer; color: var(--panel-ink-2); }
+  details.pred-inputs dl { margin: 6px 0 0; display: grid; grid-template-columns: 1fr auto; gap: 3px 10px; }
+  details.pred-inputs dt { color: var(--panel-ink-2); }
+  details.pred-inputs dd { margin: 0; text-align: right; }
+  .upstream-signal {
+    margin-top: 10px; padding: 8px 10px; font-size: 12.5px; line-height: 1.4;
+    background: rgba(57, 135, 229, 0.12); border-left: 3px solid #3987e5; border-radius: 4px;
+  }
+  .upstream-signal .value { font-size: 15px; font-weight: 600; }
+  .upstream-signal button.linky {
+    display: block; margin-top: 6px; font: inherit; padding: 0; border: 0; background: none;
+    cursor: pointer; color: #6fc3ff; text-decoration: underline;
+  }
   #legend { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 2px; }
   .chip {
     display: inline-flex; align-items: center; gap: 6px;
@@ -53,12 +79,12 @@
   .chip .dot.sq { border-radius: 2px; }
   .chip .dot.tri { width: 0; height: 0; border: none; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid #fff; }
   .chip .dot.dia { border-radius: 2px; transform: rotate(45deg); width: 9px; height: 9px; }
-  button.action {
+  button.action, a.action {
     width: 100%; margin-top: 10px; padding: 8px 10px; font-size: 13px;
     border-radius: 8px; border: 1px solid var(--panel-line);
     background: #1c5cab; color: #fff; cursor: pointer;
   }
-  button.action.quiet { background: rgba(255, 255, 255, 0.08); }
+  button.action.quiet, a.action.quiet { background: rgba(255, 255, 255, 0.08); }
   #tourbar { display: none; gap: 8px; margin-top: 10px; }
   #tourbar button { flex: 1; margin-top: 0; }
   #replaybar { display: none; margin-top: 10px; }
@@ -107,8 +133,27 @@
     padding: 4px 8px; border-radius: 6px; border: 1px solid var(--panel-line);
     transform: translate(12px, -50%); white-space: nowrap;
   }
+  #dashboard-overlay {
+    position: absolute; inset: 0; z-index: 20; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(8, 10, 12, 0.55);
+  }
+  #dashboard-overlay.open { display: flex; }
+  #dashboard-panel {
+    position: relative; width: min(1080px, 92vw); height: min(860px, 88vh);
+    background: var(--panel-bg); border: 1px solid var(--panel-line); border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden;
+  }
+  #dashboard-frame { width: 100%; height: 100%; border: 0; display: block; }
+  #dashboard-close {
+    position: absolute; top: 10px; right: 10px; z-index: 21;
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+    background: var(--panel-bg); color: var(--panel-ink);
+    border: 1px solid var(--panel-line); font-size: 16px; line-height: 1;
+  }
   @media (max-width: 640px) {
     #panel { width: calc(100% - 24px); max-height: 55%; }
+    #dashboard-panel { width: 96vw; height: 92vh; border-radius: 10px; }
   }
 </style>
 </head>
@@ -131,6 +176,7 @@
   <div id="detail"></div>
   <button class="action" id="tour-start">&#9992; Fly the water&rsquo;s path</button>
   <button class="action quiet" id="replay-start">&#9928; Replay the Aug 14-15 storm</button>
+  <button class="action quiet" id="open-dashboard">&#128202; Full prediction dashboard</button>
   <div id="replaybar">
     <div class="time" id="replay-time"></div>
     <input type="range" id="replay-slider" min="0" max="0" value="0">
@@ -155,6 +201,12 @@
     provisional, provided as is, no warranty of any kind.
     Built in the <a href="https://github.com/paulrayner/design-storm-2026" target="_blank" rel="noopener">Design Storm workspace</a>.
     Full <a href="data-terms.html" target="_blank" rel="noopener">data terms</a>.
+  </div>
+</div>
+<div id="dashboard-overlay">
+  <div id="dashboard-panel">
+    <button id="dashboard-close" aria-label="Close dashboard">&times;</button>
+    <iframe id="dashboard-frame" title="Full prediction dashboard"></iframe>
   </div>
 </div>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -415,6 +467,7 @@ function showDetail(item) {
     ${item.elevation_ft ? `<p class="note">Elevation ${Math.round(item.elevation_ft).toLocaleString()} ft</p>` : ""}
     <div id="chartbox"></div>
     <div id="influentbox"></div>
+    <div id="upstreamsignalbox"></div>
     ${CAVEATS[item.kind] ? `<details class="caveat"><summary>What can go wrong with this reading</summary><p>${CAVEATS[item.kind]}</p></details>` : ""}
     ${(item.photos || []).map((p) => `
       <a href="${p.page}" target="_blank" rel="noopener"><img class="cam" src="${p.url}" alt="${p.label}"></a>
@@ -422,6 +475,7 @@ function showDetail(item) {
   annotateGlossary();
   if (item.chart) renderChart(item);
   if (item.influent) renderInfluent();
+  if (item.feeds_prediction) renderUpstreamSignal(item);
   if (item.lat) flyToPoint(item, false);
 }
 
@@ -531,13 +585,115 @@ async function renderInfluent() {
       <canvas class="spark" id="influent-toc"></canvas>
       <div class="spark-label">Alkalinity of the arriving water, mg/L</div>
       <canvas class="spark" id="influent-alk"></canvas>
-      <div class="spark-label">Foothills influent record, Apr 2022 to Aug 2026, from the design storm dataset. Hover for dates; the spring-runoff rhythm is the pattern to notice.</div>`;
+      <div class="spark-label">Foothills influent record, Apr 2022 to Aug 2026, from the design storm dataset. Hover for dates; the spring-runoff rhythm is the pattern to notice.</div>
+      <div id="predictionbox"></div>`;
     annotateGlossary(box);
     drawSpark(document.getElementById("influent-toc"), influent.toc, "#199e70");
     drawSpark(document.getElementById("influent-alk"), influent.alk, "#3987e5");
+    renderPrediction();
   } catch (err) {
     box.innerHTML = `<div class="spark-label">Influent record unavailable (${err.message}).</div>`;
   }
+}
+
+function inputsList(inputs) {
+  return Object.entries(inputs).map(([label, v]) => `<dt>${label}</dt><dd>${formatValue(v)}</dd>`).join("");
+}
+
+async function renderPrediction() {
+  const box = document.getElementById("predictionbox");
+  try {
+    const pred = await loadPrediction();
+    box.innerHTML = `
+      <div class="spark-label" style="margin-top:14px">Soft sensor demo: predicted vs. measured TOC</div>
+      <div class="legend-lines">
+        <span><span class="swatch" style="background:#199e70"></span>Measured</span>
+        <span><span class="swatch dashed" style="color:#ffd166"></span>Predicted (${pred.toc.model}, R&sup2;=${pred.toc.metrics.r2})</span>
+      </div>
+      <canvas class="spark" id="pred-toc"></canvas>
+      <div class="spark-label" style="margin-top:12px">Soft sensor demo: predicted vs. measured alkalinity</div>
+      <div class="legend-lines">
+        <span><span class="swatch" style="background:#3987e5"></span>Measured</span>
+        <span><span class="swatch dashed" style="color:#ffd166"></span>Predicted (${pred.alk.model}, R&sup2;=${pred.alk.metrics.r2})</span>
+      </div>
+      <canvas class="spark" id="pred-alk"></canvas>
+      <div class="pred-callout">
+        <div class="col"><div class="label">TOC, ${pred.toc.latest.date}</div>
+          <div class="value">${formatValue(pred.toc.latest.predicted)} predicted</div>
+          <div class="value actual">${formatValue(pred.toc.latest.actual)} measured</div></div>
+        <div class="col"><div class="label">Alkalinity, ${pred.alk.latest.date}</div>
+          <div class="value">${formatValue(pred.alk.latest.predicted)} predicted</div>
+          <div class="value actual">${formatValue(pred.alk.latest.actual)} measured</div></div>
+      </div>
+      <details class="pred-inputs"><summary>What the model saw on ${pred.toc.latest.date}, for the TOC prediction</summary>
+        <dl>${inputsList(pred.toc.latest.inputs)}</dl></details>
+      <div class="spark-label">${pred.note} Scored on ${pred.toc.metrics.test_days} held-out days for TOC, ${pred.alk.metrics.test_days} for alkalinity.</div>`;
+    annotateGlossary(box);
+    drawPredictionSpark(document.getElementById("pred-toc"), pred.toc.series, "#199e70", "#ffd166");
+    drawPredictionSpark(document.getElementById("pred-alk"), pred.alk.series, "#3987e5", "#ffd166");
+  } catch (err) {
+    box.innerHTML = `<div class="spark-label">Prediction demo unavailable (${err.message}).</div>`;
+  }
+}
+
+async function loadPrediction() {
+  if (!state.prediction) state.prediction = await fetchJson("water-system-3d/foothills-prediction.json");
+  return state.prediction;
+}
+
+const UPSTREAM_TARGET_LABEL = { toc: "TOC", alk: "alkalinity", both: "TOC and alkalinity" };
+
+async function renderUpstreamSignal(item) {
+  const box = document.getElementById("upstreamsignalbox");
+  const { target, role } = item.feeds_prediction;
+  try {
+    const pred = await loadPrediction();
+    const targets = target === "both" ? ["toc", "alk"] : [target];
+    const lines = targets.map((t) => {
+      const p = pred[t];
+      return `<div>${UPSTREAM_TARGET_LABEL[t][0].toUpperCase() + UPSTREAM_TARGET_LABEL[t].slice(1)}: `
+        + `<span class="value">${formatValue(p.latest.predicted)}</span> predicted for ${p.latest.date}, `
+        + `using data from as much as ${p.lag_days} days earlier</div>`;
+    }).join("");
+    const ops = item.latest_ops;
+    const opsLine = ops
+      ? `<div class="note" style="margin-top:6px">This reservoir, ${formatDate(ops.date)}: `
+        + `${formatValue(ops.inflow_cfs)} cfs in, ${formatValue(ops.outflow_cfs)} cfs out, `
+        + `${Math.round(ops.pct_full)}% full</div>`
+      : "";
+    const importanceLine = reservoirImportanceLine(item, pred);
+    box.innerHTML = `
+      <div class="upstream-signal">
+        <div>${role}: this reading is one of the inputs to the Foothills soft-sensor
+        prediction (${UPSTREAM_TARGET_LABEL[target]}), giving more advance notice than the
+        sentinel gage alone.</div>
+        ${opsLine}
+        ${importanceLine}
+        ${lines}
+        <button class="linky" id="jump-to-foothills">See the full Foothills prediction &rarr;</button>
+      </div>`;
+    document.getElementById("jump-to-foothills").onclick = () => showDetail(state.byId["plant-foothills"]);
+  } catch (err) {
+    box.innerHTML = `<div class="spark-label">Prediction link unavailable (${err.message}).</div>`;
+  }
+}
+
+const RESERVOIR_FEATURE_PREFIX = {
+  "res-antero": "Antero", "res-eleven_mile": "ElevenMile",
+  "res-cheesman": "Cheesman", "res-dillon": "Dillon",
+};
+
+function reservoirImportanceLine(item, pred) {
+  const importance = pred.alk.feature_importance;
+  const prefix = RESERVOIR_FEATURE_PREFIX[item.id];
+  if (!importance || !prefix) return "";
+  const mine = (importance[`${prefix}_inflow`] || 0) + (importance[`${prefix}_outflow`] || 0);
+  const allReservoirs = Object.keys(importance)
+    .filter((k) => Object.values(RESERVOIR_FEATURE_PREFIX).some((p) => k.startsWith(p)))
+    .reduce((sum, k) => sum + importance[k], 0);
+  return `<div class="note">This reservoir's actual weight in the alkalinity model: `
+    + `${(mine * 100).toFixed(1)}% (all four reservoirs combined: ${(allReservoirs * 100).toFixed(1)}%; `
+    + `conductance and season still dominate it).</div>`;
 }
 
 async function fetchDwrStorage(chart) {
@@ -703,6 +859,64 @@ function drawSpark(canvas, series, color, cursor = -1) {
   canvas.onmouseleave = () => render(cursor);
 }
 
+function drawPredictionSpark(canvas, series, actualColor, predictedColor) {
+  const ratio = window.devicePixelRatio || 1;
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  canvas.width = w * ratio; canvas.height = h * ratio;
+  const g = canvas.getContext("2d");
+  g.scale(ratio, ratio);
+  const pad = { top: 16, bottom: 15, left: 2, right: 44 };
+  const values = series.flatMap((d) => [d.actual, d.predicted]);
+  const min = Math.min(...values), max = Math.max(...values);
+  const span = max - min || 1;
+  const last = series.length - 1;
+  const x = (i) => pad.left + (i / (last || 1)) * (w - pad.left - pad.right);
+  const y = (v) => pad.top + (1 - (v - min) / span) * (h - pad.top - pad.bottom);
+
+  function line(key, color, dashed) {
+    g.strokeStyle = color; g.lineWidth = dashed ? 1.6 : 2; g.lineJoin = "round";
+    g.setLineDash(dashed ? [4, 3] : []);
+    g.beginPath();
+    series.forEach((d, i) => (i === 0 ? g.moveTo(x(i), y(d[key])) : g.lineTo(x(i), y(d[key]))));
+    g.stroke();
+    g.setLineDash([]);
+  }
+
+  function render(highlight) {
+    g.clearRect(0, 0, w, h);
+    g.strokeStyle = "rgba(255,255,255,0.15)"; g.lineWidth = 1;
+    g.beginPath(); g.moveTo(pad.left, y(min)); g.lineTo(w - pad.right, y(min)); g.stroke();
+    line("actual", actualColor, false);
+    line("predicted", predictedColor, true);
+    g.fillStyle = "rgba(184,192,200,0.95)"; g.font = "10px -apple-system, sans-serif";
+    g.textAlign = "left";
+    g.fillText(formatValue(max), w - pad.right + 4, y(max) + 4);
+    g.fillText(formatValue(min), w - pad.right + 4, y(min) + 4);
+    g.textAlign = "center";
+    for (const tick of axisTicks(series.map((d) => ({ t: d.date })))) g.fillText(tick.text, x(tick.i), h - 3);
+    if (highlight < 0) return;
+    const d = series[highlight];
+    g.strokeStyle = "rgba(255,255,255,0.45)";
+    g.beginPath(); g.moveTo(x(highlight), pad.top); g.lineTo(x(highlight), h - pad.bottom); g.stroke();
+    g.fillStyle = actualColor;
+    g.beginPath(); g.arc(x(highlight), y(d.actual), 3, 0, Math.PI * 2); g.fill();
+    g.fillStyle = predictedColor;
+    g.beginPath(); g.arc(x(highlight), y(d.predicted), 3, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#f2f4f6";
+    g.textAlign = highlight > last / 2 ? "right" : "left";
+    g.fillText(`${formatDate(d.date)} · measured ${formatValue(d.actual)} · predicted ${formatValue(d.predicted)}`,
+      x(highlight) + (highlight > last / 2 ? -6 : 6), 10);
+  }
+
+  render(-1);
+  canvas.onmousemove = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const fraction = (e.clientX - rect.left - pad.left) / (w - pad.left - pad.right);
+    render(Math.max(0, Math.min(last, Math.round(fraction * last))));
+  };
+  canvas.onmouseleave = () => render(-1);
+}
+
 const TOUR = [
   { view: HOME,
     title: "Where a city keeps its water",
@@ -763,6 +977,15 @@ document.getElementById("tour-next").onclick = () =>
   state.tourStep >= TOUR.length - 1 ? tourExit() : tourGo(state.tourStep + 1);
 document.getElementById("tour-back").onclick = () => state.tourStep > 0 && tourGo(state.tourStep - 1);
 document.getElementById("tour-exit").onclick = tourExit;
+
+document.getElementById("open-dashboard").onclick = () => {
+  const frame = document.getElementById("dashboard-frame");
+  if (!frame.src) frame.src = "prediction-dashboard.html?embedded=1";
+  document.getElementById("dashboard-overlay").classList.add("open");
+};
+document.getElementById("dashboard-close").onclick = () => {
+  document.getElementById("dashboard-overlay").classList.remove("open");
+};
 
 const STORM = {
   frames: [], flow: [], turb: [], captions: [],
