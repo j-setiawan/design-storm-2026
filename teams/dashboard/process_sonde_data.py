@@ -10,7 +10,7 @@ Jake's models never use this file at all (see README.md). Only ~104 days
 have any casts, far less than the gage record, so anything built on it should
 be read with that sample size in mind.
 
-Run from the repository root: python teams/dashboard/process_sonde_data.py
+Run from the repository root: python process_sonde_data.py
 """
 import pandas as pd
 
