@@ -165,8 +165,7 @@
 
   /* ---- Explore ---- */
   #explore .intro { font-size: 14px; line-height: 1.5; color: var(--panel-ink-2); max-width: 760px; margin: 0 0 12px; }
-  #explore-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }
-  #x-read { position: sticky; top: 0; z-index: 3; background: rgba(16, 20, 24, 0.96); border-bottom: 1px solid var(--panel-line);
+  #explore-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 10px; }  #x-read { position: sticky; top: 0; z-index: 3; background: rgba(16, 20, 24, 0.96); border-bottom: 1px solid var(--panel-line);
     padding: 8px 0; font-size: 13px; font-variant-numeric: tabular-nums; min-height: 38px; }
   #x-read .vals { display: flex; flex-wrap: wrap; gap: 2px 16px; margin-top: 2px; }
   #x-read .vals span { white-space: nowrap; }
@@ -177,6 +176,9 @@
   .stack canvas.overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
   #x-panels canvas.heat { height: 150px; }
   .x-panel .key { margin-top: 2px; }
+
+  /* ---- Dashboard tab (folded in from the prediction dashboard) ---- */
+  #dashboard iframe { width: 100%; height: 80vh; border: 0; display: block; border-radius: 10px; background: var(--card-bg); }
 
   footer { font-size: 11.5px; line-height: 1.55; color: var(--panel-ink-2); border-top: 1px solid var(--panel-line);
     padding: 14px 20px 90px; max-width: 1240px; margin: 0 auto; }
@@ -216,6 +218,7 @@
   <div class="seg" role="group" aria-label="Mode">
     <button type="button" data-mode="lessons">Lessons</button>
     <button type="button" data-mode="explore">Explore</button>
+    <button type="button" data-mode="dashboard">Dashboard</button>
   </div>
 </header>
 
@@ -244,6 +247,11 @@
     </div>
     <div id="x-read" aria-live="off"></div>
     <div id="x-panels"></div>
+  </section>
+
+  <section id="dashboard" aria-label="Dashboard" hidden>
+    <p class="intro">The same prediction dashboard the map's overlay button opens, in its own tab.</p>
+    <iframe id="dashboard-frame" title="Prediction dashboard"></iframe>
   </section>
 </main>
 
@@ -656,9 +664,18 @@ function setMode(mode) {
   document.querySelectorAll("header .seg button").forEach((b) => b.setAttribute("aria-pressed", b.dataset.mode === mode));
   document.getElementById("lessons").hidden = mode !== "lessons";
   document.getElementById("explore").hidden = mode !== "explore";
-  try { history.replaceState(null, "", mode === "explore" ? "#explore" : "#lessons"); } catch (err) { /* ignore */ }
-  if (mode === "explore") renderExplore(); else renderCard();
+  document.getElementById("dashboard").hidden = mode !== "dashboard";
+  try { history.replaceState(null, "", mode === "explore" ? "#explore" : mode === "dashboard" ? "#dashboard" : "#lessons"); } catch (err) { /* ignore */ }
+  if (mode === "explore") renderExplore();
+  else if (mode === "dashboard") renderDashboard();
+  else renderCard();
   TeamChat.refresh();
+}
+
+// Lazy-load the dashboard iframe only on first visit to the tab.
+function renderDashboard() {
+  const frame = document.getElementById("dashboard-frame");
+  if (!frame.src) frame.src = "prediction-dashboard.html?embedded=1";
 }
 
 function chatContext() {
@@ -673,6 +690,8 @@ function chatContext() {
     if (ans !== undefined) bits.push(`they answered "${q.choices[ans].text}" (${q.choices[ans].correct ? "right" : "not right"})`);
   } else if (S.P) {
     bits.push(`they are in Explore mode on the ${S.view === "storm" ? "Aug 10-19 storm window" : "whole season"}, showing temperature, dissolved oxygen (mg/L and % saturation), turbidity and specific conductance by depth and time`);
+  } else if (S.mode === "dashboard") {
+    bits.push("they are on the Dashboard tab, the Foothills TOC/alkalinity prediction dashboard");
   }
   if (S.hover) bits.push(`they last pointed at ${S.hover}`);
   return bits.join("; ");
@@ -747,13 +766,16 @@ async function start() {
   document.getElementById("reset-progress").onclick = resetProgress;
   document.querySelectorAll("header .seg button").forEach((b) => b.onclick = () => setMode(b.dataset.mode));
   document.querySelectorAll("#explore-controls .seg button").forEach((b) => b.onclick = () => { S.view = b.dataset.view; renderExplore(); });
-  setMode(location.hash === "#explore" ? "explore" : "lessons");
+  setMode(location.hash === "#explore" ? "explore" : location.hash === "#dashboard" ? "dashboard" : "lessons");
   let timer = null, lastW = window.innerWidth;
   window.addEventListener("resize", () => {
     if (window.innerWidth === lastW) return;            // ignore phone toolbar height changes
     lastW = window.innerWidth;
     clearTimeout(timer);
-    timer = setTimeout(() => { if (S.mode === "explore") drawExplore(); else renderCard(); }, 120);
+    timer = setTimeout(() => {
+      if (S.mode === "explore") drawExplore();
+      else if (S.mode === "lessons") renderCard();
+    }, 120);
   });
 }
 
