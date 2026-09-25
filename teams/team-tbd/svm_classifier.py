@@ -133,7 +133,7 @@ def run_month(end_month=7, year=2026, date_lag_days=0, c_value=1.0, gamma="scale
                   f"R2={r2_score(actual_values, predicted_values):.3f}")
 
     if output_path is None:
-        output_path = ROOT / "teams" / "team_tbd" / f"svm_{calendar.month_name[predict_month].lower()}_predictions.csv"
+        output_path = ROOT / "teams" / "team-tbd" / f"svm_{calendar.month_name[predict_month].lower()}_predictions.csv"
     result.to_csv(output_path, index=False)
     print(f"Predictions written to {output_path}")
     print(result.to_string(index=False))

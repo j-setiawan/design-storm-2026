@@ -130,7 +130,7 @@ def run_month(end_month, year=2026, output_path=None, date_lag_days=0):
     test_start = date(year, predict_month, 1).isoformat()
     test_end = date(year, predict_month, calendar.monthrange(year, predict_month)[1]).isoformat()
     if output_path is None:
-        output_path = ROOT / "teams" / "team_tbd" / f"{calendar.month_name[predict_month].lower()}_predictions.csv"
+        output_path = ROOT / "teams" / "team-tbd" / f"{calendar.month_name[predict_month].lower()}_predictions.csv"
     print(f"Training starts 2026-04-01 and ends {train_end}; prediction month is {calendar.month_name[predict_month]} {year}.")
     return run_train_test(train_end, test_start, test_end, output_path, date_lag_days)
 
