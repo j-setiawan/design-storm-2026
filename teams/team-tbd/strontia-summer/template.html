@@ -11,7 +11,7 @@
     color-scheme: light;
     --cyan: #34c3e6; --cyan-2: #1ea9d3; --cyan-3: #6ad6ee; --teal: #0e7fa8;
     --navy: #0b2a4a; --navy-2: #163b63; --white: #ffffff; --paper: #f2fbfe; --muted: #4c6f88;
-    --water-warm: #67d6f2; --water-cold: #1d5aa8; --sand: #e6d9b8; --sand-2: #cdbd96; --rock: #b9c9d6; --rock-2: #93a8ba; --rock-3: #d3dfe8; --snow: #ffffff; --dam: #8a99a8; --dam-2: #66788a;
+    --water-warm: #9beafc; --water-cold: #0a3574; --sand: #e6d9b8; --sand-2: #cdbd96; --rock: #b9c9d6; --rock-2: #93a8ba; --rock-3: #d3dfe8; --snow: #ffffff; --dam: #8a99a8; --dam-2: #66788a;
     --plant: #2fbf71; --mud: #9a6b3a; --mineral: #eaf6fb; --sun: #ffcc33; --fish: #ff7a45;
   }
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -22,6 +22,16 @@
   .page { position: relative; z-index: 1; max-width: 1080px; margin: 0 auto; padding: 32px max(18px, env(safe-area-inset-right)) 56px max(18px, env(safe-area-inset-left)); }
   .rule { height: 8px; width: 100%; background: var(--navy); border-radius: 4px; margin-bottom: 26px; }
   .kicker { font-size: 20px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--navy); margin: 0; }
+  .head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 10px 20px; }
+  .tabs { display: flex; gap: 8px; margin-top: 6px; }
+  .tabs .btn[aria-pressed="false"] { background: rgba(255,255,255,0.55); color: var(--navy-2); }
+  .panel.dash .chips { margin: 0 0 12px 2px; }
+  .panel.dash .chips .btn[aria-pressed="false"] { background: rgba(255,255,255,0.12); color: #d6e6f2; box-shadow: none; }
+  .panel.dash { padding: 14px 14px 12px; background: #101418; color: #b8c0c8; }
+  .panel.dash p { margin: 0 0 10px 6px; font-size: 14px; }
+  .panel.dash p b { color: #f2f4f6; }
+  .panel.dash iframe { display: block; width: 100%; height: 85vh; border: 0; border-radius: 14px; background: #101418; }
+  .panel.dash iframe[hidden] { display: none; }
   h1 { font-size: clamp(28px, 4.5vw, 44px); line-height: 1.05; margin: 2px 0 22px; letter-spacing: -0.02em; text-transform: uppercase; font-weight: 900; color: var(--white); text-shadow: 0 2px 0 rgba(11,42,74,0.15); }
   .intro { max-width: 62ch; font-size: 19px; font-weight: 600; margin: 0 0 8px; color: var(--navy); }
   .intro-2 { max-width: 62ch; font-size: 16px; color: var(--navy-2); margin: 0 0 22px; }
@@ -57,6 +67,62 @@
   .tooltip { position: absolute; pointer-events: none; z-index: 3; background: var(--navy); color: var(--white); border-radius: 12px; padding: 8px 12px; font-size: 14px; display: none; min-width: 150px; font-weight: 600; }
   .tooltip .t { color: var(--cyan-3); margin-bottom: 3px; font-weight: 800; }
   .tooltip .r { display: flex; justify-content: space-between; gap: 12px; }
+  .panel.quiz { margin-top: 14px; padding: 18px 22px 20px; }
+  .qnav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+  .qnav button { appearance: none; font: inherit; font-size: 14px; font-weight: 800; color: var(--navy); background: rgba(11,42,74,0.08); border: 0; border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+  .qnav button[aria-current="true"] { background: var(--navy); color: var(--white); }
+  .qnav button.done::after { content: " \2713"; color: var(--plant); }
+  .qnav button[aria-current="true"].done::after { color: var(--cyan-3); }
+  .quiz .kick { font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--muted); }
+  .quiz .kick b { color: var(--teal); }
+  .quiz h3 { font-size: 26px; font-weight: 900; line-height: 1.1; letter-spacing: -0.01em; margin: 2px 0 10px; color: var(--navy); }
+  .quiz .look { font-size: 17px; color: var(--navy-2); margin: 0 0 6px; }
+  .quiz .look b { color: var(--teal); }
+  .quiz .btn.small { font-size: 14px; padding: 7px 14px; margin: 4px 0 8px; }
+  .quiz .prompt { font-size: 19px; font-weight: 800; line-height: 1.4; margin: 14px 0 10px; }
+  .quiz .qnum { font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--teal); margin: 18px 0 2px; }
+  .choices { display: grid; gap: 8px; }
+  .choices button { appearance: none; font: inherit; font-size: 16px; font-weight: 600; text-align: left; color: var(--navy); background: var(--paper); border: 2px solid rgba(11,42,74,0.14); border-radius: 16px; padding: 11px 14px; cursor: pointer; display: flex; gap: 12px; align-items: baseline; }
+  .choices button:hover:not(:disabled) { border-color: var(--teal); }
+  .choices button:disabled { cursor: default; }
+  .choices .letter { flex: none; width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: var(--white); display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 900; }
+  .choices button.correct { border-color: var(--plant); background: #eafaf1; }
+  .choices button.wrong { border-color: var(--fish); background: #fff1eb; }
+  .choices .mark { margin-left: auto; font-size: 13px; font-weight: 800; white-space: nowrap; }
+  .choices button.correct .mark { color: #1d8a4e; } .choices button.wrong .mark { color: #c8501f; }
+  .feedback { margin-top: 14px; padding: 14px 16px; border-radius: 16px; font-size: 16px; line-height: 1.5; }
+  .feedback.right { background: #eafaf1; border-left: 6px solid var(--plant); }
+  .feedback.miss { background: #fff1eb; border-left: 6px solid var(--fish); }
+  .feedback .headline { display: block; font-weight: 900; font-size: 18px; margin-bottom: 4px; }
+  .feedback .whynot, .feedback .answer { display: block; margin-bottom: 6px; }
+  .box { margin-top: 12px; padding: 14px 16px; border-radius: 16px; font-size: 16px; line-height: 1.5; background: var(--paper); border-left: 6px solid var(--cyan-2); }
+  .box.connect { border-left-color: var(--sun); } .box.care { border-left-color: var(--navy); }
+  .box .label { display: block; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--muted); margin-bottom: 4px; }
+  .box p { margin: 0 0 6px; } .box p:last-child { margin: 0; } .box .comparison { font-style: italic; }
+  .charts { margin-top: 14px; background: var(--navy); color: #f2f4f6; border-radius: 18px; padding: 14px 16px 12px; font-size: 14px; line-height: 1.45; }
+  .charts .label { display: block; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 800; color: var(--cyan-3); margin-bottom: 4px; }
+  .charts .caption { margin: 0 0 10px; color: #d6e6f2; }
+  .charts .visual { margin: 8px 0 12px; }
+  .charts .vis-title { font-size: 12.5px; color: #b8c0c8; margin: 0 0 4px; }
+  .charts .vis-title .note { color: var(--sun); font-weight: 700; }
+  .charts canvas { display: block; width: 100%; }
+  .charts canvas.heat { height: 220px; cursor: crosshair; touch-action: pan-y; }
+  .charts canvas.strip { height: 64px; }
+  .charts canvas.line { height: 150px; cursor: crosshair; touch-action: pan-y; }
+  .charts canvas.profile { height: 280px; cursor: crosshair; touch-action: pan-y; }
+  .charts .pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 0 18px; }
+  .charts .readout { font-size: 12.5px; min-height: 18px; margin: 4px 0 2px; color: #b8c0c8; font-variant-numeric: tabular-nums; }
+  .charts .readout b { color: #fff; font-weight: 600; }
+  .charts .key { display: flex; align-items: center; gap: 8px; font-size: 11.5px; color: #b8c0c8; margin-top: 4px; }
+  .charts .key .ramp { flex: 1; height: 8px; border-radius: 4px; }
+  .charts .key .gap { width: 14px; height: 8px; border-radius: 2px; border: 1px solid rgba(255,255,255,0.14); background: repeating-linear-gradient(135deg, rgba(255,255,255,0.14) 0 2px, transparent 2px 5px); }
+  .charts .legend { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12px; margin: 0 0 4px; }
+  .charts .legend .sw { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 5px; }
+  .charts .legend .sw.dash { height: 0; border-top: 2px dashed #ffd166; background: none !important; }
+  @media (max-width: 640px) { .charts .pair { grid-template-columns: 1fr; } .charts canvas.heat { height: 190px; } }
+  .qfoot { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 18px; }
+  .qfoot .spacer { flex: 1; } .qfoot .btn:disabled { opacity: 0.45; cursor: default; }
+  .qfoot .linkbtn { appearance: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--muted); background: none; border: 0; text-decoration: underline; cursor: pointer; padding: 4px; }
   .grownups { margin-top: 40px; font-size: 14px; color: var(--navy-2); background: rgba(255,255,255,0.55); border-radius: 18px; padding: 12px 18px; }
   .grownups summary { cursor: pointer; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-size: 13px; }
   .grownups blockquote { margin: 8px 0; padding-left: 12px; border-left: 3px solid var(--navy); font-size: 13px; }
@@ -74,8 +140,15 @@
 </div>
 <div class="page">
   <div class="rule"></div>
-  <h1>Strontia Springs Reservoir</h1>
+  <div class="head">
+    <h1>Strontia Springs Reservoir</h1>
+    <div class="tabs" role="group" aria-label="Page">
+      <button class="btn" data-tab="summer" aria-pressed="true">The summer</button>
+      <button class="btn" data-tab="dash" aria-pressed="false">Data pages</button>
+    </div>
+  </div>
 
+  <div id="summer">
   <div class="controls">
     <div class="control"><span>Show</span><div class="chips" id="chips"></div></div>
     <div class="control"><span>Pick a day</span><div class="chips" id="presets"></div></div>
@@ -84,6 +157,7 @@
 
   <div class="panel" id="section"></div>
   <div class="panel scrub"><div class="timeline" id="timeline"></div></div>
+  <div class="panel quiz" id="quiz"></div>
   <div class="stats" id="stats"></div>
   <div class="story" id="story"></div>
 
@@ -91,16 +165,31 @@
     <summary>For grown-ups: where this comes from</summary>
     <ul>
       <li>The snow on the mountains follows the Hoosier Pass snowpack record; the mountains themselves are a drawing, not the real skyline. Strontia Springs Reservoir is on the South Platte River above Denver. The sensor is a profiling sonde that Denver Water lowers through the water several times a day. Every reading here is from its export for 7 April to 19 August 2026, one profile per day, with river flow, temperature and turbidity from the USGS gage and Colorado DWR upstream, rain from NOAA station USC00058022, and snowpack from the Hoosier Pass SNOTEL station.</li>
-      <li>Dots map to measurements: plants are chlorophyll, mud is turbidity, bubbles are dissolved oxygen, flecks are specific conductance compensated to 25 C. How many dots appear, and how deep they sit, follows that day's profile. The water's shade of blue follows temperature. Depth is the sonde's vertical position as recorded, unit unstated.</li>
+      <li>Dots map to measurements: plants are chlorophyll, mud is turbidity, bubbles are dissolved oxygen, flecks are specific conductance compensated to 25 C. How many dots appear, and how deep they sit, follows that day's profile. The water's shade of blue follows temperature, stretched each day so that the day's coldest water is the darkest blue and its warmest the lightest; a mixed lake looks nearly one colour. Depth is the sonde's vertical position as recorded, unit unstated.</li>
       <li>River water sinks to the first depth where the reservoir is as cold as the river, which is how a plunging inflow behaves. The water level follows Denver Water's daily storage record for Strontia Springs from the Colorado DWR, with its rise and fall exaggerated many times over so it can be seen. The fish and the splashes are for fun. Fish swim where oxygen was highest that day.</li>
+      <li>The questions are the lessons written for the depth pictures in <code>teams/team-tbd/map/strontia.html</code>, generated by <code>analysis/build_lessons.py</code> with every number computed from the data; this page carries the nine that make sense in front of the scene and leaves out the three about reading the heatmap itself. The dashed band in the scene is the depth range that lesson points at. After an answer, the lesson's own charts appear, drawn by the lessons page's code from its data file. A "Why" box is general science, not a finding from this data.</li>
       <li>Built <span id="built"></span> by <code>build.py</code> in this folder. The technical version of this view is <code>strontia-section.html</code> at the repository root.</li>
     </ul>
     <p>The sonde values are Denver Water's own measurements; the upstream series are public USGS, Colorado DWR, NRCS and NOAA records assembled by Denver Water. Both of Denver Water's notices travel with this page:</p>
     <blockquote>The water quality data is provided "as is." Water quality data provided to the user is provisional and subject to change, and the user should not assume that the data has undergone any quality assurance or quality control review. Denver Water makes no warranty of any kind, express or implied, concerning the data, including accuracy, reliability, completeness, timeliness, or usefulness. Copyright 2026, Denver Water.</blockquote>
     <blockquote>COPYRIGHT AND DISCLAIMER: The data and metadata contained herein were prepared by Denver Water for its internal purposes only. Denver Water provides data and metadata as a public service with no claim as to the completeness, usefulness, timeliness or accuracy of its content, positional or otherwise. Denver Water and its employees make no warranty, express or implied, and assume no legal liability or responsibility for the ability of users to fulfill their intended purposes in accessing or using data or metadata or for omissions in content regarding such. The information provided is presented "as is," without warranty of any kind, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, or non-infringement. Your use of this information is at your own risk. In providing this information or access to it, Denver Water assumes no obligation to assist the user in the use of such information or in the development, use, or maintenance of any applications applied to or associated with the data or metadata. Any sale, reproduction or distribution of this information, or products derived therefrom, in any format is expressly prohibited.</blockquote>
   </details>
+  </div>
+
+  <div class="panel dash" id="dash" hidden>
+    <div class="chips" role="group" aria-label="Data page">
+      <button class="btn" data-page="dash" aria-pressed="true">Foothills prediction dashboard</button>
+      <button class="btn" data-page="depth" aria-pressed="false">Strontia Springs, by depth</button>
+    </div>
+    <p id="dash-note"></p>
+    <iframe id="dash-frame" title="Foothills prediction dashboard"></iframe>
+    <iframe id="depth-frame" title="Strontia Springs, by depth" hidden></iframe>
+  </div>
 </div>
 
+<script>
+/*__CORE__*/
+</script>
 <script>
 const DATA = /*__DATA__*/;
 const S = DATA.sonde, U = DATA.upstream;
@@ -122,7 +211,7 @@ const DOTS = {
   do: { name: "Dissolved oxygen", colour: "--mineral", base: 20, scale: 110, bubble: true, move: "rise" },
   spc: { name: "Conductivity", colour: "--mineral", base: 10, scale: 90, fleck: true, move: "still" },
 };
-const state = { day: 0, pos: 0, playing: false, show: { chl: true, turb: true, do: true, spc: true } };
+const state = { day: 0, pos: 0, playing: false, glide: null, show: { chl: true, turb: true, do: true, spc: true } };
 const PLAY_SPEED = 1 / 70; // days per frame while playing
 const dayMs = S.days.map(parseDate), upMs = U.dates.map(parseDate);
 const upIndex = new Map(upMs.map((m, i) => [m, i]));
@@ -157,7 +246,7 @@ let xWet = G.xShore; // where the surface meets the bed at the current level
 function updateLevel() { const v = sec.up.Storage_AF; const want = v == null ? 0 : (1 - (v - storLo) / (storHi - storLo || 1)) * LVL_PX; lvl += (want - lvl) * (motion ? 0.05 : 1); xWet = G.xShore; while (xWet < G.xDeep && bedY(xWet) < waterTop()) xWet += 2; }
 const motion = !matchMedia("(prefers-reduced-motion: reduce)").matches;
 const sectionCard = document.getElementById("section");
-const sec = { cur: {}, target: {}, drops: [], dots: [], bubbles: [], rain: [], fish: [], t: 0, plunge: null, plungeY: null, hover: null, up: {} };
+const sec = { cur: {}, target: {}, drops: [], dots: [], bubbles: [], rain: [], fish: [], t: 0, plunge: null, plungeY: null, hover: null, up: {}, band: null };
 const FP = {}; for (const k in S.params) FP[k] = S.days.map((_, di) => filledProfile(k, di));
 // Value of an upstream column at a fractional day position, blending the two nearest days.
 function upPos(col) { const i = Math.floor(state.pos), f = state.pos - i, j = Math.min(i + 1, S.days.length - 1); const a = upAt(col, dayMs[i]), b = upAt(col, dayMs[j]); if (a == null) return b; if (b == null) return a; return a + (b - a) * f; }
@@ -180,7 +269,12 @@ function plungeDepth() {
   return { depth: dMax - 2, temp: tr };
 }
 function bestAirDepth() { const d = sec.cur.do; let bi = 0; for (let i = 1; i < d.length; i++) if (d[i] > d[bi]) bi = i; return S.depths[bi]; }
-const waterColour = tempC => mix(cssVar("--water-cold"), cssVar("--water-warm"), Math.max(0, Math.min(1, (tempC - 5) / 17)));
+// Shade stretched over the day's own temperatures: the warmest water on screen is the lightest blue and the coldest the
+// darkest, over at least a few degrees, so the layers stand out every day and a mixed lake looks nearly one colour.
+const SPAN_MIN = 4;
+let tempHi = 0, tempSpan = SPAN_MIN;
+function setTempRange(temps) { let lo = Infinity, hi = -Infinity; for (const v of temps) { if (v < lo) lo = v; if (v > hi) hi = v; } tempHi = hi; tempSpan = Math.max(hi - lo, SPAN_MIN); }
+const waterColour = tempC => mix(cssVar("--water-cold"), cssVar("--water-warm"), Math.max(0, Math.min(1, 1 - (tempHi - tempC) / tempSpan)));
 
 let cv, ctx, secTip;
 function buildSection() {
@@ -210,10 +304,10 @@ function buildSection() {
   function poke(p, force) { const i = iSpr(p.x); spr.v[i] += force; if (i > 0) spr.v[i - 1] += force / 2; if (i < NSPR - 1) spr.v[i + 1] += force / 2; for (let n = 0; n < 4; n++) sec.bubbles.push({ x: p.x + rnd(-8, 8), y: Math.max(p.y, surfY(p.x) + 4), r: rnd(1.4, 3.2), vy: rnd(-0.7, -0.3), life: 90 }); }
   setTargets();
   for (let n = 0; n < 3; n++) sec.fish.push({ x: rnd(G.xDeep, G.xDam - 80) , y: G.ySurf + 80, dir: n % 2 ? 1 : -1, sp: rnd(0.5, 0.9), ph: rnd(0, 6.28), size: rnd(0.9, 1.3) });
-  sizeCanvas(); new ResizeObserver(sizeCanvas).observe(sectionCard);
+  sizeScene(); new ResizeObserver(sizeScene).observe(sectionCard);
   requestAnimationFrame(frame);
 }
-function sizeCanvas() { const w = sectionCard.clientWidth, dpr = window.devicePixelRatio || 1; cv.style.width = `${w}px`; cv.style.height = `${w * G.H / G.W}px`; cv.width = Math.round(w * dpr); cv.height = Math.round(w * G.H / G.W * dpr); }
+function sizeScene() { const w = sectionCard.clientWidth, dpr = window.devicePixelRatio || 1; cv.style.width = `${w}px`; cv.style.height = `${w * G.H / G.W}px`; cv.width = Math.round(w * dpr); cv.height = Math.round(w * G.H / G.W * dpr); }
 
 // Dots: each kind has a population that follows the day's overall level, placed by depth from the day's profile.
 function wantCount(k) { const c = sec.cur[k]; let m = 0; for (const v of c) m += norm(k, v); m /= c.length; return Math.round(DOTS[k].base + DOTS[k].scale * m); }
@@ -271,7 +365,8 @@ function updateSprings() {
 }
 function frame() {
   sec.t++;
-  if (state.playing) { state.pos += PLAY_SPEED; if (state.pos >= S.days.length - 1) state.pos = 0; setTargets(); const d = Math.round(state.pos); if (d !== state.day) { state.day = d; updateStory(); } updateCursor(); }
+  if (state.playing) { let p = state.pos + PLAY_SPEED; if (p >= S.days.length - 1) p = 0; moveTo(p); }
+  else if (state.glide) { const g = state.glide, t = Math.min(1, (performance.now() - g.t0) / g.dur), e = t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; if (t >= 1) state.glide = null; moveTo(t >= 1 ? g.to : g.from + (g.to - g.from) * e); }
   lerpProfiles(); smoothUp(); updateLevel();
   if (motion) { updateSprings(); updateDrops(); updateRain(); updateBubbles(); updateDots(); updateFish(); }
   else { sec.plunge = plungeDepth(); sec.plungeY = yOf(sec.plunge.depth); if (sec.dots.length === 0) for (const k in DOTS) for (let n = 0; n < wantCount(k); n++) sec.dots.push(newDot(k)); }
@@ -321,6 +416,7 @@ function draw() {
   const paper = cssVar("--paper");
   const tc = thermo(), rain = sec.up.PRCP || 0, swe = sec.up.SWE, temps = sec.cur.temp, cloud = Math.max(0, Math.min(1, (rain - 0.02) / 0.1));
   const wave = (x, i) => 1.2 * Math.sin(x * 0.02 + sec.t * 0.025 + i * 0.6) + (tc.depth != null ? 3 * Math.exp(-Math.pow((S.depths[i] - tc.depth) / 4, 2)) * Math.sin(x * 0.012 - sec.t * 0.02) : 0);
+  setTempRange(temps);
   // sky
   const sky = ctx.createLinearGradient(0, 0, 0, G.H); sky.addColorStop(0, "#b9e6f7"); sky.addColorStop(0.45, "#eaf7fc"); sky.addColorStop(1, "#f6fbfd"); ctx.fillStyle = sky; ctx.fillRect(0, 0, G.W, G.H);
   if (cloud < 1) { ctx.globalAlpha = 1 - cloud; ctx.fillStyle = cssVar("--sun"); ctx.beginPath(); ctx.arc(470, 46, 26, 0, 6.283); ctx.fill(); ctx.strokeStyle = cssVar("--sun"); ctx.lineWidth = 3; for (let a = 0; a < 12; a++) { const ang = a * Math.PI / 6 + sec.t * 0.004; ctx.beginPath(); ctx.moveTo(470 + Math.cos(ang) * 33, 46 + Math.sin(ang) * 33); ctx.lineTo(470 + Math.cos(ang) * 43, 46 + Math.sin(ang) * 43); ctx.stroke(); } ctx.globalAlpha = 1; }
@@ -361,6 +457,8 @@ function draw() {
   // surface shine
   ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = 2.5; ctx.beginPath(); let pen = false; for (let i = 0; i < NSPR; i++) { const x = xSpr(i); if (x < xWet) continue; const y = surfY(x); pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; } ctx.stroke();
   for (const d of sec.drops) if (!d.wet) { ctx.fillStyle = d.mud ? cssVar("--mud") : riverCol; ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 6.283); ctx.fill(); }
+  // the depth band the current question points at
+  if (sec.band) { const b = sec.band, y0 = Math.max(yOf(b.z0 - 0.5), waterTop() + 3), y1 = Math.min(yOf(b.z1 + 0.5), G.yBot - 2), x0 = xWet + 16, x1 = G.xDam - 16; ctx.save(); ctx.setLineDash([9, 7]); ctx.lineWidth = 2.5; ctx.strokeStyle = "rgba(255,255,255,0.95)"; roundRect(x0, y0, x1 - x0, y1 - y0, 10); ctx.stroke(); ctx.restore(); pill(b.label.toUpperCase(), x1 - 10, y1 + 18 > G.yBot - 8 ? y0 - 18 : y1 + 18, { align: "right", size: 12 }); }
   // callout pills
   const tv = sec.target.temp;
   const ax = Math.min(xWet + 200, G.xDam - 260), ay = surfY(ax) + 9; pill(`SURFACE  ${fmt(tv[0], 0)} C`, ax - 24, ay + 34, { size: 14, tail: [ax, ay] });
@@ -420,7 +518,7 @@ function drawTimeline() {
   upMs.forEach((m, i) => { const v = vals[i]; if (v == null) { pen = false; return; } const x = xOf(m + MS_DAY / 2, w).toFixed(1), y = sy(v).toFixed(1); d += `${pen ? "L" : "M"}${x},${y}`; area += area ? `L${x},${y}` : `M${x},${base}L${x},${y}`; pen = true; });
   flowSvg.appendChild(svgEl("path", { d: `${area}L${xOf(upMs[upMs.length - 1] + MS_DAY / 2, w)},${base}Z`, fill: "var(--cyan)" }));
   flowSvg.appendChild(svgEl("path", { d, fill: "none", stroke: "var(--navy)", "stroke-width": 3, "stroke-linejoin": "round" }));
-  flowSvg.appendChild(svgEl("text", { x: T.left + 2, y: 12, style: "font-size:12px;font-weight:800;letter-spacing:0.08em;fill:var(--muted)" }, "RIVER FLOW, ALL SUMMER. DRAG TO MOVE THROUGH TIME."));
+  flowSvg.appendChild(svgEl("text", { x: T.left + 2, y: 12, style: "font-size:12px;font-weight:800;letter-spacing:0.08em;fill:var(--muted)" }, "RIVER FLOW"));
   axisSvg.textContent = ""; axisSvg.setAttribute("viewBox", `0 0 ${w} 24`); axisSvg.setAttribute("width", w);
   const dt = new Date(T.xLo); dt.setUTCDate(1); dt.setUTCMonth(dt.getUTCMonth() + 1);
   while (dt.getTime() < T.xHi) { axisSvg.appendChild(svgEl("text", { x: xOf(dt.getTime(), w), y: 17, "text-anchor": "middle", style: "font-size:14px;font-weight:800;fill:var(--navy)" }, MONTHS[dt.getUTCMonth()].toUpperCase())); dt.setUTCMonth(dt.getUTCMonth() + 1); }
@@ -431,18 +529,170 @@ function updateCursor() { const i = Math.floor(state.pos), f = state.pos - i, j 
 // ---------- Buttons ----------
 function buildControls() {
   const chips = document.getElementById("chips");
-  for (const k in DOTS) { const b = el("button", "chip"); b.setAttribute("aria-pressed", "true"); const dot = el("span", "dot"); dot.style.background = cssVar(DOTS[k].colour); if (DOTS[k].bubble) { dot.style.background = "transparent"; dot.style.boxShadow = "inset 0 0 0 2px #7fb6cc"; } if (DOTS[k].fleck) { dot.style.boxShadow = "inset 0 0 0 2px #7fb6cc"; dot.style.borderRadius = "3px"; } b.appendChild(dot); b.appendChild(document.createTextNode(DOTS[k].name)); b.addEventListener("click", () => { state.show[k] = !state.show[k]; b.setAttribute("aria-pressed", String(state.show[k])); }); chips.appendChild(b); }
+  for (const k in DOTS) { const b = el("button", "chip"); b.dataset.k = k; b.setAttribute("aria-pressed", "true"); const dot = el("span", "dot"); dot.style.background = cssVar(DOTS[k].colour); if (DOTS[k].bubble) { dot.style.background = "transparent"; dot.style.boxShadow = "inset 0 0 0 2px #7fb6cc"; } if (DOTS[k].fleck) { dot.style.boxShadow = "inset 0 0 0 2px #7fb6cc"; dot.style.borderRadius = "3px"; } b.appendChild(dot); b.appendChild(document.createTextNode(DOTS[k].name)); b.addEventListener("click", () => { state.show[k] = !state.show[k]; b.setAttribute("aria-pressed", String(state.show[k])); }); chips.appendChild(b); }
   const pr = document.getElementById("presets");
-  DATA.presets.forEach((ps, n) => { const b = el("button", "btn", ps.label); b.title = fmtDate(parseDate(ps.date)); b.setAttribute("aria-pressed", String(n === 0)); b.addEventListener("click", () => { stop(); const ms = parseDate(ps.date); let best = 0, bd = Infinity; dayMs.forEach((m, i) => { const d = Math.abs(m - ms); if (d < bd) { bd = d; best = i; } }); setDay(best); pr.querySelectorAll(".btn").forEach(x => x.setAttribute("aria-pressed", String(x === b))); }); pr.appendChild(b); });
+  DATA.presets.forEach((ps, n) => { const b = el("button", "btn", ps.label); b.title = fmtDate(parseDate(ps.date)); b.setAttribute("aria-pressed", String(n === 0)); b.addEventListener("click", () => { stop(); setDay(dayIndexOf(ps.date)); pr.querySelectorAll(".btn").forEach(x => x.setAttribute("aria-pressed", String(x === b))); }); pr.appendChild(b); });
   document.getElementById("play").addEventListener("click", () => state.playing ? stop() : play());
   document.addEventListener("keydown", e => { if (e.key === "ArrowLeft") { stop(); setDay(Math.max(0, state.day - 1)); } if (e.key === "ArrowRight") { stop(); setDay(Math.min(S.days.length - 1, state.day + 1)); } if (e.key === " ") { e.preventDefault(); state.playing ? stop() : play(); } });
   document.getElementById("built").textContent = DATA.built;
+  // Tabs: the summer scene, or the team's data pages, each loaded into its frame on first view.
+  const PAGES = {
+    dash: { frame: "dash-frame", doc: DATA.dashboard, note: "The Foothills TOC and alkalinity prediction dashboard from teams/team-tbd/dashboard, as built: a backtest of the soft-sensor models, not a live forecast." },
+    depth: { frame: "depth-frame", doc: DATA.depth, note: "The reservoir by depth and time from the profiling sonde, with the full lesson set and an Explore view of linked heatmaps (teams/team-tbd/map/strontia.html). Its chat needs the team server." },
+  };
+  let page = "dash";
+  const showPage = () => { for (const k in PAGES) { const f = document.getElementById(PAGES[k].frame); f.hidden = k !== page; if (k === page && !f.srcdoc) f.srcdoc = PAGES[k].doc; }
+    document.getElementById("dash-note").textContent = PAGES[page].note;
+    document.querySelectorAll("#dash .chips .btn").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.page === page))); };
+  document.querySelectorAll("#dash .chips .btn").forEach(b => b.addEventListener("click", () => { page = b.dataset.page; showPage(); }));
+  document.querySelectorAll(".tabs .btn").forEach(b => b.addEventListener("click", () => {
+    const dash = b.dataset.tab === "dash";
+    document.querySelectorAll(".tabs .btn").forEach(x => x.setAttribute("aria-pressed", String(x === b)));
+    document.getElementById("summer").hidden = dash; document.getElementById("dash").hidden = !dash;
+    if (dash) { stop(); showPage(); }
+  }));
 }
-function play() { state.playing = true; document.getElementById("play").textContent = "Pause"; document.querySelectorAll("#presets .btn").forEach(x => x.setAttribute("aria-pressed", "false")); }
+function play() { state.playing = true; state.glide = null; document.getElementById("play").textContent = "Pause"; document.querySelectorAll("#presets .btn").forEach(x => x.setAttribute("aria-pressed", "false")); }
 function stop() { state.playing = false; document.getElementById("play").textContent = "Play the summer"; }
-function setDay(i) { state.day = i; state.pos = i; setTargets(); updateStory(); updateCursor(); }
+function setDay(i) { state.glide = null; state.day = i; state.pos = i; setTargets(); updateStory(); updateCursor(); }
+function moveTo(pos) { state.pos = pos; setTargets(); const d = Math.round(pos); if (d !== state.day) { state.day = d; updateStory(); } updateCursor(); }
+function dayIndexOf(date) { const ms = parseDate(date); let best = 0, bd = Infinity; dayMs.forEach((m, i) => { const d = Math.abs(m - ms); if (d < bd) { bd = d; best = i; } }); return best; }
+// Travel through the summer to a day: a quick glide, slower for a longer span, so the mountains, level and water change on the way.
+function glideTo(toI, fromI) { stop(); document.querySelectorAll("#presets .btn").forEach(x => x.setAttribute("aria-pressed", "false")); if (fromI != null) { state.pos = fromI; state.day = fromI; setTargets(); updateStory(); } if (!motion) { setDay(toI); return; } state.glide = { from: state.pos, to: toI, t0: performance.now(), dur: Math.min(4500, 900 + 35 * Math.abs(toI - state.pos)) }; }
+function setShow(keys) { for (const k in DOTS) state.show[k] = keys.includes(k); document.querySelectorAll("#chips .chip").forEach(b => b.setAttribute("aria-pressed", String(state.show[b.dataset.k]))); }
+
+// ---------- Quiz: the lessons, asked in front of the scene ----------
+const QUIZ = DATA.quiz, quizEl = document.getElementById("quiz"), QSTORE = "strontia-summer-quiz-v1";
+const PRAISE = ["Good job!", "Nice thinking!", "You got it!", "Great reasoning!", "Spot on!"];
+// quiz.at is an index into QUIZ, or NONE: no question open, the scene is free to explore.
+const NONE = -1;
+const quiz = { at: NONE, step: 1, answers: {}, done: new Set(), praise: {} };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+function loadQuiz() { try { const p = JSON.parse(localStorage.getItem(QSTORE) || "{}"); (p.done || []).forEach(id => quiz.done.add(id)); quiz.at = QUIZ.findIndex(q => q.id === p.at); } catch (e) { /* storage blocked: start with no question open */ } }
+function saveQuiz() { try { localStorage.setItem(QSTORE, JSON.stringify({ done: [...quiz.done], at: quiz.at === NONE ? "explore" : QUIZ[quiz.at].id })); } catch (e) { /* storage blocked: progress lasts for this visit */ } }
+const answered = (Q, qi) => (quiz.answers[Q.id] || {})[qi];
+const allAnswered = Q => Q.questions.every((_, qi) => answered(Q, qi) != null);
+// Open a question: the scene travels to its day and shows its dots.
+function showQuestion(i) {
+  quiz.at = Math.max(NONE, Math.min(QUIZ.length - 1, i));
+  if (quiz.at === NONE) { sec.band = null; setShow(Object.keys(DOTS)); saveQuiz(); renderQuiz(); return; }
+  const Q = QUIZ[quiz.at];
+  quiz.step = Math.min(Q.questions.length, 1 + Q.questions.filter((_, qi) => answered(Q, qi) != null).length);
+  setShow(Q.show); sec.band = Q.band; travel(Q);
+  saveQuiz(); renderQuiz();
+}
+function travel(Q) { glideTo(dayIndexOf(Q.date), Q.from ? dayIndexOf(Q.from) : null); }
+function questionHtml(Q, q, qi) {
+  const ans = answered(Q, qi), many = Q.questions.length > 1;
+  let h = `<div class="question" id="q${qi}">${many ? `<div class="qnum">Question ${qi + 1} of ${Q.questions.length}</div>` : ""}<p class="prompt">${esc(q.prompt)}</p><div class="choices">`;
+  h += q.choices.map((c, k) => { const cls = ans == null ? "" : c.correct ? "correct" : k === ans ? "wrong" : "", mark = cls === "correct" ? "&#10003; right answer" : cls === "wrong" ? "&#10007; your pick" : "";
+    return `<button type="button" class="${cls}" data-q="${qi}" data-k="${k}" ${ans == null ? "" : "disabled"}><span class="letter">${"ABC"[k]}</span><span>${esc(c.text)}</span>${mark ? `<span class="mark">${mark}</span>` : ""}</button>`; }).join("");
+  h += `</div>`;
+  if (ans != null) {
+    const pick = q.choices[ans], right = q.choices.find(c => c.correct), key = `${Q.id}#${qi}`;
+    if (!quiz.praise[key]) quiz.praise[key] = PRAISE[Math.floor(Math.random() * PRAISE.length)];
+    h += `<div class="feedback ${pick.correct ? "right" : "miss"}"><span class="headline">${pick.correct ? quiz.praise[key] : "Not quite, here is what happened."}</span>${pick.correct ? "" : `<span class="whynot"><b>Why not &ldquo;${esc(pick.text)}&rdquo;?</b> ${esc(pick.why_not)}</span>`}<span class="answer">The answer: <b>${esc(right.text)}</b>.</span>${esc(q.explain)}</div>`;
+  }
+  return h + `</div>`;
+}
+function renderQuiz() {
+  const nav = `<button type="button" data-i="${NONE}" ${quiz.at === NONE ? 'aria-current="true"' : ""}>Explore</button>` +
+    QUIZ.map((x, i) => `<button type="button" data-i="${i}" class="${quiz.done.has(x.id) ? "done" : ""}" ${i === quiz.at ? 'aria-current="true"' : ""} title="${esc(x.title)}">${i + 1}</button>`).join("");
+  if (quiz.at === NONE) {
+    const n = QUIZ.filter(x => quiz.done.has(x.id)).length;
+    quizEl.innerHTML = `<div class="qnav" aria-label="Questions">${nav}</div>
+      <p class="look">Explore the summer with the buttons above, or pick a question. Each one takes the scene to its day.${n ? ` You have finished ${n} of ${QUIZ.length}.` : ""}</p>
+      <div class="qfoot"><span class="spacer"></span><button type="button" class="btn primary" id="q-next">${n ? "Continue the questions" : "Start the questions"} &rarr;</button></div>`;
+    quizEl.querySelectorAll(".qnav button").forEach(b => b.addEventListener("click", () => showQuestion(+b.dataset.i)));
+    document.getElementById("q-next").addEventListener("click", () => showQuestion(Math.max(0, QUIZ.findIndex(x => !quiz.done.has(x.id)))));
+    return;
+  }
+  const Q = QUIZ[quiz.at], n = Q.questions.length, finished = allAnswered(Q), last = quiz.at === QUIZ.length - 1;
+  let body = ""; for (let qi = 0; qi < quiz.step; qi++) body += questionHtml(Q, Q.questions[qi], qi);
+  const showCharts = answered(Q, 0) != null;
+  if (showCharts) body += chartsHtml(Q);
+  if (finished) {
+    body += `<div class="box"><span class="label">Why it happens &middot; general science, not from this data</span><p>${esc(Q.why)}</p>${Q.comparison ? `<p class="comparison">${esc(Q.comparison)}</p>` : ""}</div>`;
+    if (Q.connect) body += `<div class="box connect"><span class="label">Connect the dots</span><p>${esc(Q.connect)}</p></div>`;
+    if (Q.care) body += `<div class="box care"><span class="label">Why you'd care</span><p>${esc(Q.care)}</p></div>`;
+  }
+  const canNext = quiz.step < n ? answered(Q, quiz.step - 1) != null : finished;
+  const nextLabel = quiz.step < n ? "Next question &rarr;" : last ? "Finished! Back to exploring" : "Next &rarr;";
+  quizEl.innerHTML = `<div class="qnav" aria-label="Questions">${nav}</div>
+    <div class="kick">Question ${quiz.at + 1} of ${QUIZ.length} &middot; <b>${esc(fmtDate(parseDate(Q.date)))}</b>${Q.whatif ? " &middot; a what-if" : ""}</div>
+    <h3>${esc(Q.title)}</h3>
+    <p class="look"><b>${Q.whatif ? "The situation:" : "Look:"}</b> ${esc(Q.look)}</p>
+    <button type="button" class="btn small" id="q-travel">${Q.from ? "Watch it again" : "Jump to this day"}</button>
+    ${body}
+    <div class="qfoot"><button type="button" class="btn" id="q-back">&larr; Back</button><span class="spacer"></span><button type="button" class="linkbtn" id="q-reset">Reset progress</button><button type="button" class="btn primary" id="q-next" ${canNext ? "" : "disabled"}>${nextLabel}</button></div>`;
+  quizEl.querySelectorAll(".qnav button").forEach(b => b.addEventListener("click", () => showQuestion(+b.dataset.i)));
+  quizEl.querySelectorAll(".choices button").forEach(b => b.addEventListener("click", () => answer(+b.dataset.q, +b.dataset.k)));
+  document.getElementById("q-travel").addEventListener("click", () => travel(Q));
+  document.getElementById("q-back").addEventListener("click", () => { if (quiz.step > 1) { quiz.step--; renderQuiz(); } else showQuestion(quiz.at - 1); });
+  document.getElementById("q-next").addEventListener("click", () => { if (quiz.step < n) { quiz.step++; renderQuiz(); const t = document.getElementById(`q${quiz.step - 1}`); if (t) t.scrollIntoView({ block: "nearest", behavior: "smooth" }); } else showQuestion(last ? NONE : quiz.at + 1); });
+  if (showCharts) drawCharts(Q);
+  document.getElementById("q-reset").addEventListener("click", () => { quiz.done.clear(); quiz.answers = {}; quiz.praise = {}; try { localStorage.removeItem(QSTORE); } catch (e) { /* storage blocked */ } showQuestion(NONE); });
+}
+// The lesson's own charts (heatmaps, strips, line and depth charts), as on the lessons page, in a dark card.
+const P = DATA.profile;
+function chartsHtml(Q) {
+  const one = (v, k) => {
+    if (v.type === "heat") {
+      const meta = P.params[v.param], view = P.views[v.view], dom = view.params[v.param].domain;
+      return `<div class="visual"><div class="vis-title">${v.note ? `<span class="note">${esc(v.note)}</span><br>` : ""}${esc(meta.label)}, ${esc(meta.units)}${meta.log ? " (log scale)" : ""} &middot; ${esc(view.label)} &middot; surface at the top</div>
+        <canvas class="heat" id="c${k}" aria-label="${esc(meta.label)} by depth and time"></canvas><div class="readout" id="c${k}-read"></div>
+        <div class="key"><span>${esc(fmtVal(dom[0], meta))}</span><span class="ramp" style="background:linear-gradient(90deg, ${PROFILE_RAMP.join(",")})"></span><span>${esc(fmtVal(dom[1], meta))}</span><span class="gap"></span><span>no reading</span></div></div>`;
+    }
+    if (v.type === "strip") {
+      const title = v.which === "gage" ? "River gage above the reservoir: how muddy (turbidity), FNU, log scale" : "Foothills water plant: organic carbon (TOC) in the arriving water, mg/L, daily lab value";
+      return `<div class="visual"><div class="vis-title">${title}</div><canvas class="strip" id="c${k}"></canvas></div>`;
+    }
+    const items = v.series.map(s => `<span><span class="sw" style="background:${s.color}"></span>${esc(s.name)}</span>`);
+    if (v.ref) items.push(`<span><span class="sw dash"></span>${esc(v.ref.label)}</span>`);
+    const kind = v.type === "profile" ? "profile" : "line";
+    return `<div class="visual"><div class="vis-title">${esc(v.title)}, ${esc(v.units)}${kind === "profile" ? " &middot; surface at the top" : ""}</div>${items.length > 1 ? `<div class="legend">${items.join("")}</div>` : ""}
+      <canvas class="${kind}" id="c${k}" aria-label="${esc(v.title)}"></canvas><div class="readout" id="c${k}-read"></div></div>`;
+  };
+  const pair = Q.visuals.length > 1 && Q.visuals.every(v => v.type === "profile");
+  return `<div class="charts"><span class="label">The charts behind this question</span><p class="caption">${esc(Q.orig_look)}</p><div class="${pair ? "pair" : ""}">${Q.visuals.map(one).join("")}</div></div>`;
+}
+function drawCharts(Q) {
+  Q.visuals.forEach((v, k) => {
+    const c = document.getElementById("c" + k), read = document.getElementById(`c${k}-read`); if (!c) return;
+    const hover = (fn, idle) => { read.textContent = idle; c.onpointermove = c.onpointerdown = fn; c.onpointerleave = () => { read.textContent = idle; if (fn.reset) fn.reset(); }; };
+    if (v.type === "heat") {
+      const meta = P.params[v.param], geo = drawHeat(c, P, v.view, v.param, { highlight: v.highlight, points: v.points });
+      hover(e => { const r = c.getBoundingClientRect(), cell = geo.pick(e.clientX - r.left, e.clientY - r.top); if (!cell) return;
+        const val = geo.view.params[v.param].values[cell.i * geo.nZ + cell.j];
+        read.innerHTML = `<b>${fmtWhen(profileTime(geo.view, cell.i), true)}</b> &middot; ${P.depths[cell.j]} m deep &middot; <b>${esc(fmtVal(val, meta))}</b>`; },
+        "Move over the picture (or tap it) to read a value." + (v.view === "storm" ? " Yellow dashed line: river gage peak." : "") + " Dotted lines: sensor serviced.");
+    } else if (v.type === "strip") {
+      const { X, t0, t1 } = viewX(P.views.storm, c.clientWidth), st = (v.which === "gage" ? drawGageStrip : drawTocStrip)(c, P, X);
+      if (v.which === "toc") { st.g.font = "10px -apple-system, sans-serif"; timeAxis(st.g, X, t0, t1, st.h, true); }
+    } else {
+      const prof = v.type === "profile", drawIt = (i = -1) => (prof ? drawProfileChart : drawLineChart)(c, v, i);
+      let chart = drawIt();
+      const fn = e => { const r = c.getBoundingClientRect(), i = chart.nearest(prof ? e.clientY - r.top : e.clientX - r.left); chart = drawIt(i);
+        const head = prof ? `${v.depths[i]} m deep` : fmtWhen(new Date(v.x[i] + "T12:00:00"), false);
+        read.innerHTML = `<b>${esc(head)}</b> &middot; ` + v.series.map(s => `${esc(s.name)}: <b>${s.values[i] === null ? "no reading" : s.values[i] + " " + esc(v.units)}</b>`).join(" &middot; ") + (v.ref ? ` &middot; ${esc(v.ref.label)}: <b>${v.ref.value} ${esc(v.units)}</b>` : ""); };
+      fn.reset = () => { chart = drawIt(); };
+      hover(fn, "Move over the chart (or tap it) to read the values.");
+    }
+  });
+}
+let quizResize = null, quizWidth = window.innerWidth;
+window.addEventListener("resize", () => { if (window.innerWidth === quizWidth) return; quizWidth = window.innerWidth; clearTimeout(quizResize); quizResize = setTimeout(() => { if (QUIZ.length) renderQuiz(); }, 150); });
+
+function answer(qi, k) {
+  const Q = QUIZ[quiz.at]; if (answered(Q, qi) != null) return;
+  quiz.answers[Q.id] = Object.assign({}, quiz.answers[Q.id], { [qi]: k });
+  if (allAnswered(Q)) { quiz.done.add(Q.id); saveQuiz(); }
+  renderQuiz();
+  const fb = quizEl.querySelector(`#q${qi} .feedback`); if (fb) fb.scrollIntoView({ block: "nearest", behavior: "smooth" });
+}
 
 buildControls(); buildSection(); buildTimeline(); setDay(0);
+loadQuiz(); if (quiz.at !== NONE) { setShow(QUIZ[quiz.at].show); sec.band = QUIZ[quiz.at].band; setDay(dayIndexOf(QUIZ[quiz.at].date)); } renderQuiz();
 </script>
 </body>
 </html>
