@@ -230,7 +230,7 @@ async function render() {
           <td>${formatValue(r.pct_full)}%</td></tr>` : "").join("")}
     </table>
     <p class="note">From Denver Water's own daily reservoir-levels report, scraped and cached locally
-      (teams/model-comparison/fetch_reservoir_ops_history.py). Preliminary, subject to change.</p>`;
+      (teams/dashboard/fetch_reservoir_ops_history.py). Preliminary, subject to change.</p>`;
 
   const lagRows = (rows) => rows.map((r) => `
     <tr><td>${r.lag_days}d</td><td>${r.rows}</td>
