@@ -20,7 +20,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, root_mean_squared_error
 from sklearn.model_selection import GridSearchCV, TimeSeriesSplit, train_test_split
 
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "teams", "model-comparison"))
 from model_comparison import build_toc_dataset, build_alk_dataset
 from process_sonde_data import CHL_OFFSET_UGL
 

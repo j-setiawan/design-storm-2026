@@ -4,10 +4,10 @@ One-command refresh for everything the prediction dashboard needs.
 Runs, in the required order, from the repository root:
   1. teams/dashboard/process_sonde_data.py
        data/Strontia *.xlsx -> teams/dashboard/sonde_daily.csv
-  2. water-system-3d/build_foothills_prediction.py
-       -> water-system-3d/foothills-prediction.json
-  3. water-system-3d/build_dashboard_extra.py
-       -> water-system-3d/dashboard-extra.json (needs sonde_daily.csv from
+  2. teams/dashboard/build_foothills_prediction.py
+       -> teams/dashboard/foothills-prediction.json
+  3. teams/dashboard/build_dashboard_extra.py
+       -> teams/dashboard/dashboard-extra.json (needs sonde_daily.csv from
           step 1; imports build_toc_dataset/build_alk_dataset from
           teams/dashboard/model_comparison.py)
 
@@ -20,9 +20,6 @@ That script scrapes ~1,300 individual pages from a non-API public page and
 is already run to completion -- see HANDOFF.md. Re-run it manually, and only
 to extend the date range, never as part of a routine refresh.
 
-Usage, from the repository root:
-    python water-system-3d/refresh_dashboard.py
-
 Then open prediction-dashboard.html (or the map's dashboard overlay button)
 and reload -- both files it reads (dashboard-extra.json,
 foothills-prediction.json) will now be current.
@@ -31,15 +28,15 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 STEPS = [
     ("Processing sonde depth profiles into daily aggregates",
      "teams/dashboard/process_sonde_data.py"),
-    ("Building Foothills TOC/alkalinity backtest",
-     "water-system-3d/build_foothills_prediction.py"),
+    ("Building` Foothills TOC/alkalinity backtest",
+     "teams/dashboard/build_foothills_prediction.py"),
     ("Building dashboard extras (sonde series, depth profile, reservoir snapshot, lag test)",
-     "water-system-3d/build_dashboard_extra.py"),
+     "teams/dashboard/build_dashboard_extra.py"),
 ]
 
 
