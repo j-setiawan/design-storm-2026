@@ -173,8 +173,8 @@ function bar(label, value, max, suffix = "%") {
 
 async function render() {
   const [pred, extra] = await Promise.all([
-    fetchJson("water-system-3d/foothills-prediction.json"),
-    fetchJson("water-system-3d/dashboard-extra.json"),
+    fetchJson("teams/dashboard/foothills-prediction.json"),
+    fetchJson("teams/dashboard/dashboard-extra.json"),
   ]);
 
   document.getElementById("toc-section").innerHTML = `

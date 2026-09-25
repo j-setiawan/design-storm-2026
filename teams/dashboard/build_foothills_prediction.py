@@ -34,7 +34,7 @@ DATA = "data"
 RESERVOIR_OPS = "teams/dashboard/reservoir_ops_history.json"
 UPSTREAM_RESERVOIRS = ["Antero", "Eleven Mile", "Cheesman", "Dillon"]
 UPSTREAM_LAG_DAYS = 14
-OUT = "water-system-3d/foothills-prediction.json"
+OUT = "teams/dashboard/foothills-prediction.json"
 
 RF_PARAM_GRID = {
     "n_estimators": [100, 200],

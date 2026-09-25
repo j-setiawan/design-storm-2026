@@ -27,7 +27,8 @@ SONDE_XLSX = "data/Strontia 0407_0819.xlsx"
 SONDE_DAILY_CSV = "teams/dashboard/sonde_daily.csv"
 RESERVOIR_OPS_JSON = "teams/dashboard/reservoir_ops_history.json"
 UPSTREAM_RESERVOIRS = ["Antero", "Eleven Mile", "Cheesman", "Dillon"]
-OUT = "water-system-3d/dashboard-extra.json"
+OUT = "teams/dashboard/dashboard-extra.json"
+
 LAGS_TO_TRY = [0, 1, 2, 3, 4]
 RF_PARAM_GRID = {
     "n_estimators": [100, 200], "max_depth": [3, 5, 7],
