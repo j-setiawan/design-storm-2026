@@ -10,12 +10,12 @@ Jake's models never use this file at all (see README.md). Only ~104 days
 have any casts, far less than the gage record, so anything built on it should
 be read with that sample size in mind.
 
-Run from the repository root: python process_sonde_data.py
+Run from the repository root: python teams/team-tbd/dashboard/process_sonde_data.py
 """
 import pandas as pd
 
 SONDE_XLSX = "data/Strontia 0407_0819.xlsx"
-OUT = "teams/dashboard/sonde_daily.csv"
+OUT = "teams/team-tbd/dashboard/sonde_daily.csv"
 
 # The Chl ug/L fluorometer channel reads a stable ~-0.20 ug/L low across every
 # quiet, no-bloom stretch of this deployment (e.g. 2026-06-16 to 2026-07-09),

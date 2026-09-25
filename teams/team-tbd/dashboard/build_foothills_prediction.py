@@ -5,10 +5,9 @@ scripts/Alkalinity_Soft_Sensor.ipynb (same lags, engineered features,
 chronological split, sample weights), scored on data/FoothillsInfluent.csv.
 
 Alkalinity also folds in upstream reservoir release timing (Antero, Eleven
-Mile, Cheesman, Dillon inflow/outflow, from teams/dashboard/
-reservoir_ops_history.json), lagged 14 days -- a real, tested improvement
+Mile, Cheesman, Dillon inflow/outflow, from reservoir_ops_history.json), lagged 14 days -- a real, tested improvement
 (R2 0.61 -> 0.69) over the sentinel-gage-only model. See
-teams/dashboard/test_upstream_reservoir_features.py for the comparison.
+test_upstream_reservoir_features.py for the comparison.
 TOC does not use it: the same test was inconclusive for TOC (the baseline
 itself is unstable on this date range), so it is left as the gage-only model.
 
@@ -18,7 +17,7 @@ soft sensor would have told an operator, using data the model never trained on.
 
 Offline; rerun after data/ or reservoir_ops_history.json changes. Run from the
 repository root:
-    python water-system-3d/build_foothills_prediction.py
+    python teams/team-tbd/dashboard/build_foothills_prediction.py
 """
 import json
 
@@ -31,10 +30,10 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVR
 
 DATA = "data"
-RESERVOIR_OPS = "teams/dashboard/reservoir_ops_history.json"
+RESERVOIR_OPS = "teams/team-tbd/dashboard/reservoir_ops_history.json"
 UPSTREAM_RESERVOIRS = ["Antero", "Eleven Mile", "Cheesman", "Dillon"]
 UPSTREAM_LAG_DAYS = 14
-OUT = "teams/dashboard/foothills-prediction.json"
+OUT = "teams/team-tbd/dashboard/foothills-prediction.json"
 
 RF_PARAM_GRID = {
     "n_estimators": [100, 200],

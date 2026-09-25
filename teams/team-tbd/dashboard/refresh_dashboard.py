@@ -20,23 +20,23 @@ That script scrapes ~1,300 individual pages from a non-API public page and
 is already run to completion -- see HANDOFF.md. Re-run it manually, and only
 to extend the date range, never as part of a routine refresh.
 
-Then open prediction-dashboard.html (or the map's dashboard overlay button)
-and reload -- both files it reads (dashboard-extra.json,
+Then open teams/team-tbd/map/prediction-dashboard.html (or the map's dashboard
+overlay button) and reload -- both files it reads (dashboard-extra.json,
 foothills-prediction.json) will now be current.
 """
 import subprocess
 import sys
 from pathlib import Path
 
-REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+REPO_ROOT = Path(__file__).resolve().parent.parent.parent.parent
 
 STEPS = [
     ("Processing sonde depth profiles into daily aggregates",
-     "teams/dashboard/process_sonde_data.py"),
+     "teams/team-tbd/dashboard/process_sonde_data.py"),
     ("Building` Foothills TOC/alkalinity backtest",
-     "teams/dashboard/build_foothills_prediction.py"),
+     "teams/team-tbd/dashboard/build_foothills_prediction.py"),
     ("Building dashboard extras (sonde series, depth profile, reservoir snapshot, lag test)",
-     "teams/dashboard/build_dashboard_extra.py"),
+     "teams/team-tbd/dashboard/build_dashboard_extra.py"),
 ]
 
 

@@ -1,14 +1,14 @@
 """
 Generates dashboard-extra.json: the additional data the standalone prediction
-dashboard (../prediction-dashboard.html) needs beyond foothills-prediction.json
+dashboard (../map/prediction-dashboard.html) needs beyond foothills-prediction.json
 -- sonde time series, a depth-profile snapshot, the sonde lag-test comparison,
 and a compact snapshot of the upstream reservoirs (not the full 2.7MB
 reservoir_ops_history.json).
 
-Offline; rerun after teams/dashboard/sonde_daily.csv,
+Offline; rerun after ]sonde_daily.csv,
 reservoir_ops_history.json, or data/Strontia 0407_0819.xlsx change.
 
-    python water-system-3d/build_dashboard_extra.py
+    python teams/team-tbd/dashboard/build_dashboard_extra.py
 """
 import json
 import sys
@@ -24,10 +24,10 @@ from model_comparison import build_toc_dataset, build_alk_dataset
 from process_sonde_data import CHL_OFFSET_UGL
 
 SONDE_XLSX = "data/Strontia 0407_0819.xlsx"
-SONDE_DAILY_CSV = "teams/dashboard/sonde_daily.csv"
-RESERVOIR_OPS_JSON = "teams/dashboard/reservoir_ops_history.json"
+SONDE_DAILY_CSV = "teams/team-tbd/dashboard/sonde_daily.csv"
+RESERVOIR_OPS_JSON = "teams/team-tbd/dashboard/reservoir_ops_history.json"
 UPSTREAM_RESERVOIRS = ["Antero", "Eleven Mile", "Cheesman", "Dillon"]
-OUT = "teams/dashboard/dashboard-extra.json"
+OUT = "teams/team-tbd/dashboard/dashboard-extra.json"
 
 LAGS_TO_TRY = [0, 1, 2, 3, 4]
 RF_PARAM_GRID = {

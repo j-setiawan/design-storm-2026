@@ -6,7 +6,9 @@ depth in the reservoir, and how do storms and spring runoff change that picture?
 We turned Denver Water's profiling sonde record (Apr 7 to Aug 19, 2026) into a
 depth-by-time picture of the reservoir, followed the August 14 to 15 storm from the river
 gage through the reservoir to the Foothills plant, and put the result on the Strontia
-Springs Dam marker of a copy of the 3D map.
+Springs Dam marker of a copy of the 3D map. The map copy and the pop-out page also fold in
+another team member's Foothills TOC/alkalinity prediction dashboard (`dashboard/`), as a
+map overlay button and as a Dashboard tab.
 
 **Readings are provisional** and the data terms below apply to everything here.
 
@@ -40,6 +42,15 @@ open http://localhost:8765/teams/team-tbd/map/design-storm-water-system-3d
 Click the Strontia Springs Dam marker. The panel widens and shows the depth picture: toggle the storm window or the whole season, pick
 a parameter, and hover or touch for time, depth and value. The storm view adds the river
 gage above and the plant's organic carbon below on the same time axis.
+
+### The Foothills prediction dashboard
+
+A second team member's TOC/alkalinity prediction dashboard is folded in here, alongside the
+depth panel: the **📊 Full prediction dashboard** button on the map copy opens it as an
+overlay, and the pop-out page's **Dashboard** tab opens the same page in its own tab. Both
+lazy-load `map/prediction-dashboard.html`, which reads `dashboard/foothills-prediction.json`
+and `dashboard/dashboard-extra.json`. Regenerate those from `dashboard/refresh_dashboard.py`
+(see `dashboard/REFRESH.md`) -- this folder's own regeneration commands below don't touch them.
 
 ### The pop-out page: lessons and Explore
 
@@ -83,11 +94,14 @@ unchanged. Each question uses
 your Claude Code usage.
 Under plain `serve.py` the chat explains how to start the team server.
 
-The copy differs from the original map in four ways (the fourth is the chat window): a `DATA_ROOT` constant so it can
+The copy differs from the original map in five ways (the fourth is the chat window, the fifth is
+the dashboard button): a `DATA_ROOT` constant so it can
 fetch the shared data from this subfolder, the profile panel (`renderProfile()` and
 helpers, marked "Team addition", with the pop-out button), and one attribution line. The
 chat window (`map/team-chat.js`, `map/team-chat.css`) and the heatmap drawing
-(`map/strontia-core.js`) are separate files shared with the pop-out page. `system.json` is not
+(`map/strontia-core.js`) are separate files shared with the pop-out page. The **📊 Full
+prediction dashboard** button and overlay open `map/prediction-dashboard.html`, folded in from
+another team member's work (see "The Foothills prediction dashboard" above). `system.json` is not
 regenerated; the page sets the `profile` flag on `dam-strontia` itself.
 
 ## Regenerating everything
@@ -131,6 +145,8 @@ To score the fill-in method: `.venv/bin/python autoresearch/evaluate.py` (dev; a
 | `map/strontia-lessons.json` | Lesson text, questions and highlight regions (generated). |
 | `map/strontia-core.js` | Heatmap, strip and line-chart drawing shared by both pages. |
 | `map/team-chat.js`, `map/team-chat.css` | The chat window shared by both pages. |
+| `map/prediction-dashboard.html` | The Foothills TOC/alkalinity prediction dashboard, opened by the map's overlay button and the pop-out page's Dashboard tab. |
+| `dashboard/` | Generators and generated JSON/CSV for the prediction dashboard (`refresh_dashboard.py`, see `dashboard/REFRESH.md`). |
 | `autoresearch/` | The fill-in experiment: locked harness, the method under test, results log. |
 
 ## Fill-in experiment (Phase 5)

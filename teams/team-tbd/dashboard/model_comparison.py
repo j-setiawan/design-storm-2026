@@ -5,8 +5,6 @@ weights as scripts/TOC_SoftSensor.ipynb and scripts/Alkalinity_Soft_Sensor.ipynb
 then adds SVR and an MLP regressor alongside his linear-regression and random-forest
 baselines, to check whether a different model family beats CatBoost's numbers in
 guide.md (TOC R2 0.74 / RMSE 0.33, Alkalinity R2 0.68 / RMSE 5.20).
-
-Run from the repository root: python teams/dashboard/model_comparison.py
 """
 import numpy as np
 import pandas as pd

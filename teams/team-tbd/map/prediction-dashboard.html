@@ -173,8 +173,8 @@ function bar(label, value, max, suffix = "%") {
 
 async function render() {
   const [pred, extra] = await Promise.all([
-    fetchJson("teams/dashboard/foothills-prediction.json"),
-    fetchJson("teams/dashboard/dashboard-extra.json"),
+    fetchJson("../dashboard/foothills-prediction.json"),
+    fetchJson("../dashboard/dashboard-extra.json"),
   ]);
 
   document.getElementById("toc-section").innerHTML = `
@@ -229,8 +229,8 @@ async function render() {
         <tr><td>${name}</td><td>${formatValue(r.inflow_cfs)}</td><td>${formatValue(r.outflow_cfs)}</td>
           <td>${formatValue(r.pct_full)}%</td></tr>` : "").join("")}
     </table>
-    <p class="note">From Denver Water's own daily reservoir-levels report, scraped and cached locally
-      (teams/dashboard/fetch_reservoir_ops_history.py). Preliminary, subject to change.</p>`;
+    <p class="note">From Denver Water's own daily reservoir-levels report, scraped and cached locally.
+      Preliminary, subject to change.</p>`;
 
   const lagRows = (rows) => rows.map((r) => `
     <tr><td>${r.lag_days}d</td><td>${r.rows}</td>
