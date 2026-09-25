@@ -107,8 +107,27 @@
     padding: 4px 8px; border-radius: 6px; border: 1px solid var(--panel-line);
     transform: translate(12px, -50%); white-space: nowrap;
   }
+  #dashboard-overlay {
+    position: absolute; inset: 0; z-index: 20; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(8, 10, 12, 0.55);
+  }
+  #dashboard-overlay.open { display: flex; }
+  #dashboard-panel {
+    position: relative; width: min(1080px, 92vw); height: min(860px, 88vh);
+    background: var(--panel-bg); border: 1px solid var(--panel-line); border-radius: 14px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5); overflow: hidden;
+  }
+  #dashboard-frame { width: 100%; height: 100%; border: 0; display: block; }
+  #dashboard-close {
+    position: absolute; top: 10px; right: 10px; z-index: 21;
+    width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+    background: var(--panel-bg); color: var(--panel-ink);
+    border: 1px solid var(--panel-line); font-size: 16px; line-height: 1;
+  }
   @media (max-width: 640px) {
     #panel { width: calc(100% - 24px); max-height: 55%; }
+    #dashboard-panel { width: 96vw; height: 92vh; border-radius: 10px; }
   }
 </style>
 </head>
@@ -131,6 +150,7 @@
   <div id="detail"></div>
   <button class="action" id="tour-start">&#9992; Fly the water&rsquo;s path</button>
   <button class="action quiet" id="replay-start">&#9928; Replay the Aug 14-15 storm</button>
+  <button class="action quiet" id="open-dashboard">&#128202; Full prediction dashboard</button>
   <div id="replaybar">
     <div class="time" id="replay-time"></div>
     <input type="range" id="replay-slider" min="0" max="0" value="0">
@@ -155,6 +175,12 @@
     provisional, provided as is, no warranty of any kind.
     Built in the <a href="https://github.com/paulrayner/design-storm-2026" target="_blank" rel="noopener">Design Storm workspace</a>.
     Full <a href="data-terms.html" target="_blank" rel="noopener">data terms</a>.
+  </div>
+</div>
+<div id="dashboard-overlay">
+  <div id="dashboard-panel">
+    <button id="dashboard-close" aria-label="Close dashboard">&times;</button>
+    <iframe id="dashboard-frame" title="Full prediction dashboard"></iframe>
   </div>
 </div>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -763,6 +789,15 @@ document.getElementById("tour-next").onclick = () =>
   state.tourStep >= TOUR.length - 1 ? tourExit() : tourGo(state.tourStep + 1);
 document.getElementById("tour-back").onclick = () => state.tourStep > 0 && tourGo(state.tourStep - 1);
 document.getElementById("tour-exit").onclick = tourExit;
+
+document.getElementById("open-dashboard").onclick = () => {
+  const frame = document.getElementById("dashboard-frame");
+  if (!frame.src) frame.src = "prediction-dashboard.html?embedded=1";
+  document.getElementById("dashboard-overlay").classList.add("open");
+};
+document.getElementById("dashboard-close").onclick = () => {
+  document.getElementById("dashboard-overlay").classList.remove("open");
+};
 
 const STORM = {
   frames: [], flow: [], turb: [], captions: [],
