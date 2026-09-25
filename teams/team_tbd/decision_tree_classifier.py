@@ -104,7 +104,7 @@ def run_month(end_month, year=2026, max_depth=None, min_samples_leaf=2, output_p
         print("Test dates have no defined actual classes, so agreement cannot be scored.")
 
     if output_path is None:
-        output_path = ROOT / "teams" / "strontia-min-distance" / f"decision_tree_{calendar.month_name[predict_month].lower()}_predictions.csv"
+        output_path = ROOT / "teams" / "team_tbd" / f"decision_tree_{calendar.month_name[predict_month].lower()}_predictions.csv"
     result.to_csv(output_path, index=False)
     print(f"Predictions written to {output_path}")
     print(result.to_string(index=False))

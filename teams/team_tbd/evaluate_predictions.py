@@ -76,7 +76,7 @@ def evaluate(path):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("csv_file", help="prediction CSV, e.g. teams/strontia-min-distance/august_predictions.csv")
+    parser.add_argument("csv_file", help="prediction CSV, e.g. teams/team_tbd/august_predictions.csv")
     args = parser.parse_args()
     evaluate(args.csv_file)
 
